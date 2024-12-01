@@ -35,7 +35,7 @@ int are_floats_equal(float a, float b, float epsilon) {
 int main(void) {
     // Declare clock and vectors
     clock_t start, end;
-    float *xC, *xAsm, *y;
+    float* xC, * xAsm, * y;
 
     // Declare and intialize parameters
     float epsilon = 0.00001f;
@@ -49,11 +49,11 @@ int main(void) {
 
 
     printf("Vector size 2e^: ");
-    scanf("%d"
-          "", &vectorInput);
+    scanf_s("%d"
+        "", &vectorInput);
     vectorSize = vectorSize << vectorInput;
     printf("Scalar value: ");
-    scanf("%f", &scalar);
+    scanf_s("%f", &scalar);
 
     printf("Vector X is initialized as [1, ... , vector_size ] \n");
     printf("Vector X is initialized as [ 11 + 0, ... , 11 + vector_size ] \n");
@@ -62,7 +62,7 @@ int main(void) {
     xAsm = (float*)malloc(vectorSize * sizeof(float));
     y = (float*)malloc(vectorSize * sizeof(float));
 
-    for(int i = 0; i < 2; i++) {
+    for (int i = 0; i < 30; i++) { // run 30 times
         intializeVectors(xC, y, vectorSize);
         start = clock();
         cFunc(xC, y, scalar, vectorSize);
@@ -70,39 +70,39 @@ int main(void) {
         cPerformance += ((double)(end - start) * 1000.0 / CLOCKS_PER_SEC);
     }
 
-    // for(int i = 0; i < 30; i++) {
-    //     intializeVectors(xAsm, y, vectorSize);
-    //     start = clock();
-    //     cFunc(xC, y, scalar, vectorSize);
-    //     // asmFunc(vectorSize, xAsm, y, scalar);
-    //     end = clock();
-    //     cPerformance += ((double)(end - start) * 1000.0 / CLOCKS_PER_SEC);
-    // }
+     for(int i = 0; i < 30; i++) { // run 30 times
+         intializeVectors(xAsm, y, vectorSize);
+         start = clock();
+         asmFunc(vectorSize, xAsm, y, scalar);
+         end = clock();
+         asmPerformance += ((double)(end - start) * 1000.0 / CLOCKS_PER_SEC);
+     }
 
 
     printf("C Output  : ");
-    for(int j = 0; j < 10; j++) {
+    for (int j = 0; j < 10; j++) {
         printf("%f ", xC[j]);
     }
     printf("\nAsm Output: ");
-    for(int j = 0; j < 10; j++) {
+    for (int j = 0; j < 10; j++) {
         printf("%f ", xAsm[j]);
     }
-
+    
     int isValid = 1;
-    for(int j = 0; j < vectorSize; j++) {
-        if(!are_floats_equal(xC[j], xAsm[j], epsilon)) {
+    for (int j = 0; j < vectorSize; j++) {
+        if (!are_floats_equal(xC[j], xAsm[j], epsilon)) {
             isValid = 0;
             break;
         }
     }
 
-    printf("\nThe x86-64 output is %s\n\n", isValid? "correct" : "incorrect");
+    printf("\nThe x86-64 output is %s\n\n", isValid ? "correct" : "incorrect");
 
     free(xC);
     free(xAsm);
     free(y);
 
+    printf("After running 30 times: \n");
     printf("\nPerformance C  : %lfms\n", cPerformance / 30);
     printf("Performance ASM: %lfms\n", asmPerformance / 30);
 
