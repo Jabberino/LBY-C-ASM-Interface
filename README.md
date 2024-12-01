@@ -19,8 +19,8 @@ $X, Y, Z$ is a vector containing single-precision floating-point values.
 ## Execution times and analysis
 
 ### Set 1: with no fractional part
-  Vector X is initialized as [ 1, ... , vector_size ] 
-  Vector Y is initialized as [ 11 + 0, ... , 11 + (vector_size - 1) ] 
+Vector X is initialized as [ 1, ... , vector_size ] 
+Vector Y is initialized as [ 11 + 0, ... , 11 + (vector_size - 1) ] 
   
 | Vector Size | 2^20   | 2^24   | 2^30   | 
 |-------------|--------|--------|--------|
@@ -29,8 +29,8 @@ $X, Y, Z$ is a vector containing single-precision floating-point values.
 | Same output | Yes    | Yes    | Yes    |
 
 ### Set 2: with fractional part
-  Vector X is initialized as [ 25.83944 + 0, ... , 25.83944 + (vector_size - 1) ] 
-  Vector Y is initialized as [ 100.9324 + 0, ... , 100.9324 + (vector_size - 1) ]
+Vector X is initialized as [ 25.83944 + 0, ... , 25.83944 + (vector_size - 1) ] 
+Vector Y is initialized as [ 100.9324 + 0, ... , 100.9324 + (vector_size - 1) ]
 | Vector Size | 2^20   | 2^24   | 2^30   | 
 |-------------|--------|--------|--------|
 | C           | 3.133333 | 47.000000 | 3431.033333 | 
