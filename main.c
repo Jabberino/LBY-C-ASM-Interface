@@ -19,6 +19,7 @@ void cFunc(float* input1, float* input2, float scalar, int vectorSize) {
         input1[i] = input1[i] * scalar;
         input1[i] = input1[i] + input2[i];
     }
+
 }
 void intializeVectors(float* input1, float* input2, int vectorSize) {
     for (int i = 0; i < vectorSize; i++) {
@@ -34,78 +35,77 @@ int are_floats_equal(float a, float b, float epsilon) {
 int main(void) {
     // Declare clock and vectors
     clock_t start, end;
-    float* xC, * xAsm, * y;
+    float *xC, *xAsm, *y;
 
     // Declare and intialize parameters
     float epsilon = 0.00001f;
     float scalar = 2.0f;
-    int vectorSizes[] = {2e5, 2e5, 2e7};
-    int results[2][3] = {
-        {0,0,0},
-        {0,0,0}
-    };
+    int vectorSize = 1;
+    int vectorInput = 0;
 
+    // Intialize results
+    double cPerformance = 0;
+    double asmPerformance = 0;
+
+
+    printf("Vector size 2e^: ");
+    scanf("%d"
+          "", &vectorInput);
+    vectorSize = vectorSize << vectorInput;
     printf("Scalar value: ");
     scanf("%f", &scalar);
 
     printf("Vector X is initialized as [1, ... , vector_size ] \n");
     printf("Vector X is initialized as [ 11 + 0, ... , 11 + vector_size ] \n");
 
-
-    for(int i = 0; i < 1; i++) {
-        xC = (float*)malloc(vectorSizes[i] * sizeof(float));
-        xAsm = (float*)malloc(vectorSizes[i] * sizeof(float));
-        y = (float*)malloc(vectorSizes[i] * sizeof(float));
-
-        for(int j = 0; j < 30; j++) {
-            intializeVectors(xC, y, vectorSizes[i]);
-            start = clock();
-            cFunc(xC, xAsm, scalar, vectorSizes[i]);
-            end = clock();
-            results[0][i] += ((double)(end - start)) / CLOCKS_PER_SEC;
-        }
-
-        for(int j = 0; j < 30; j++) {
-            intializeVectors(xAsm, y, vectorSizes[i]);
-            start = clock();
-            // asmFunc(vectorSizes[i], xAsm, y, scalar);
-            cFunc(xAsm, xAsm, scalar, vectorSizes[i]);
-            end = clock();
-            results[1][i] += ((double)(end - start)) / CLOCKS_PER_SEC;
-        }
-
-        printf("C Output:");
-        for(int j = 0; j < 10; j++) {
-            printf("%f ", xC[j]);
-        }
-        printf("\nAsm Output:");
-        for(int j = 0; j < 10; j++) {
-            printf("%f ", xC[j]);
-        }
-
-        int isValid = 1;
-        for(int j = 0; i < vectorSizes[i]; i++) {
-            if(!are_floats_equal(xC[j], xAsm[j], epsilon)) {
-                isValid = 0;
-                break;
-            }
-        }
-
-        printf("\nThe x86-64 output is %s\n", isValid? "correct" : "incorrect");
-
-        free(xC);
-        free(xAsm);
-        free(y);
-
-        printf("done");
-    }
+    xC = (float*)malloc(vectorSize * sizeof(float));
+    xAsm = (float*)malloc(vectorSize * sizeof(float));
+    y = (float*)malloc(vectorSize * sizeof(float));
 
     for(int i = 0; i < 2; i++) {
-        for(int j = 0; j < 3; j++) {
-            printf("%d ", results[i][j]);
-        }
-        printf("\n");
+        intializeVectors(xC, y, vectorSize);
+        start = clock();
+        cFunc(xC, y, scalar, vectorSize);
+        end = clock();
+        cPerformance += ((double)(end - start) * 1000.0 / CLOCKS_PER_SEC);
     }
+
+    // for(int i = 0; i < 30; i++) {
+    //     intializeVectors(xAsm, y, vectorSize);
+    //     start = clock();
+    //     cFunc(xC, y, scalar, vectorSize);
+    //     // asmFunc(vectorSize, xAsm, y, scalar);
+    //     end = clock();
+    //     cPerformance += ((double)(end - start) * 1000.0 / CLOCKS_PER_SEC);
+    // }
+
+
+    printf("C Output  : ");
+    for(int j = 0; j < 10; j++) {
+        printf("%f ", xC[j]);
+    }
+    printf("\nAsm Output: ");
+    for(int j = 0; j < 10; j++) {
+        printf("%f ", xAsm[j]);
+    }
+
+    int isValid = 1;
+    for(int j = 0; j < vectorSize; j++) {
+        if(!are_floats_equal(xC[j], xAsm[j], epsilon)) {
+            isValid = 0;
+            break;
+        }
+    }
+
+    printf("\nThe x86-64 output is %s\n\n", isValid? "correct" : "incorrect");
+
+    free(xC);
+    free(xAsm);
+    free(y);
+
+    printf("\nPerformance C  : %lfms\n", cPerformance / 30);
+    printf("Performance ASM: %lfms\n", asmPerformance / 30);
+
 
     return 0;
 }
