@@ -3,6 +3,7 @@
 #include <time.h>
 
 extern float asmFunc(int vectorSize, float* input1, float* input2, float scalar);
+
 void cFunc(float* input1, float* input2, float scalar, int vectorSize) {
     int i;
     for (i = 0; i < vectorSize - (vectorSize % 4); i += 4) {
@@ -23,8 +24,8 @@ void cFunc(float* input1, float* input2, float scalar, int vectorSize) {
 }
 void intializeVectors(float* input1, float* input2, int vectorSize) {
     for (int i = 0; i < vectorSize; i++) {
-        input1[i] = i + 1;
-        input2[i] = i + 11;
+        input1[i] = i + 25.83944;
+        input2[i] = i + 100.9324;
     }
 
 }
@@ -48,15 +49,15 @@ int main(void) {
     double asmPerformance = 0;
 
 
-    printf("Vector size 2e^: ");
+    printf("Vector size 2e^: "); 
     scanf_s("%d"
         "", &vectorInput);
     vectorSize = vectorSize << vectorInput;
     printf("Scalar value: ");
     scanf_s("%f", &scalar);
 
-    printf("Vector X is initialized as [1, ... , vector_size ] \n");
-    printf("Vector X is initialized as [ 11 + 0, ... , 11 + vector_size ] \n");
+    printf("Vector X is initialized as [ 25.83944 + 0, ... , 25.83944 + vector_size ] \n");
+    printf("Vector Y is initialized as [ 100.9324 + 0, ... , 100.9324 + vector_size ] \n\n");
 
     xC = (float*)malloc(vectorSize * sizeof(float));
     xAsm = (float*)malloc(vectorSize * sizeof(float));
@@ -103,7 +104,7 @@ int main(void) {
     free(y);
 
     printf("After running 30 times: \n");
-    printf("\nPerformance C  : %lfms\n", cPerformance / 30);
+    printf("Performance C  : %lfms\n", cPerformance / 30);
     printf("Performance ASM: %lfms\n", asmPerformance / 30);
 
 
