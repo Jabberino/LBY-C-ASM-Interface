@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-//#include <tgmath.h>
 #include <time.h>
 
 extern float asmFunc(int vectorSize, float* input1, float* input2, float scalar);
@@ -33,75 +32,78 @@ int are_floats_equal(float a, float b, float epsilon) {
 }
 
 int main(void) {
+    // Declare clock and vectors
     clock_t start, end;
     float* xC, * xAsm, * y;
 
+    // Declare and intialize parameters
     float epsilon = 0.00001f;
-    int vector_size = 12;
     float scalar = 2.0f;
+    int vectorSizes[] = {2e20, 2e5, 2e7};
+    int results[2][3] = {
+        {0,0,0},
+        {0,0,0}
+    };
 
-    printf("Vector size: ");
-    scanf_s("%d", &vector_size);
     printf("Scalar value: ");
-    scanf_s("%f", &scalar);
+    scanf("%f", &scalar);
+
     printf("Vector X is initialized as [1, ... , vector_size ] \n");
     printf("Vector X is initialized as [ 11 + 0, ... , 11 + vector_size ] \n");
 
-    xC = (float*)malloc(vector_size * sizeof(float));
-    xAsm = (float*)malloc(vector_size * sizeof(float));
-    y = (float*)malloc(vector_size * sizeof(float));
-    intializeVectors(xC, y, vector_size);
 
-    // C start
-    start = clock();
-    cFunc(xC, y, scalar, vector_size);
-    end = clock();
-    double C_time = ((double)(end - start)) / CLOCKS_PER_SEC;
-    // C end
-    //------------------- C Sanity Check --------------------  
-    printf("C SANITY CHECK \n");
-    int isValid = 1;
-    for (int i = 0; i < vector_size; i++) {
-        if (i < 10) {
-            printf("%f , ", xC[i]);
+    for(int i = 0; i < 1; i++) {
+        xC = (float*)malloc(vectorSizes[i] * sizeof(float));
+        xAsm = (float*)malloc(vectorSizes[i] * sizeof(float));
+        y = (float*)malloc(vectorSizes[i] * sizeof(float));
+
+        for(int j = 0; j < 30; j++) {
+            intializeVectors(xC, y, vectorSizes[i]);
+            start = clock();
+            cFunc(xC, xAsm, scalar, vectorSizes[i]);
+            end = clock();
+            results[0][i] += ((double)(end - start)) / CLOCKS_PER_SEC;
         }
-        if (!are_floats_equal(xC[i], xC[i], epsilon)) {
-            // printf("mismatch at %f, %f\n", asmAns[i], cAns[i]);
-            isValid = 0;
-            break;
+
+        for(int j = 0; j < 30; j++) {
+            intializeVectors(xAsm, y, vectorSizes[i]);
+            start = clock();
+            // asmFunc(vectorSizes[i], xAsm, y, scalar);
+            cFunc(xAsm, xAsm, scalar, vectorSizes[i]);
+            end = clock();
+            results[1][i] += ((double)(end - start)) / CLOCKS_PER_SEC;
         }
+
+        printf("C Output:");
+        for(int j = 0; j < 10; j++) {
+            printf("%f ", xC[j]);
+        }
+        printf("Asm Output:");
+        for(int j = 0; j < 10; j++) {
+            printf("%f ", xC[j]);
+        }
+
+        int isValid = 1;
+        for(int j = 0; i < vectorSizes[i]; i++) {
+            if(!are_floats_equal(xC[j], xAsm[j], epsilon)) {
+                isValid = 0;
+                break;
+            }
+        }
+
+        printf("The x86-64 output is %s\n", isValid? "correct" : "incorrect");
+
+        free(xC);
+        free(xAsm);
+        free(y);
     }
-    printf("The loop took %f seconds to execute\n", C_time);
-    free(y);
 
-    y = (float*)malloc(vector_size * sizeof(float));
-    intializeVectors(xAsm, y, vector_size);
-
-    // ASM start
-    start = clock();
-    //cFunc(xAsm, y, scalar, vector_size);
-    asmFunc(vector_size, xAsm, y, scalar);
-    end = clock();
-    double asm_time = ((double)(end - start)) / CLOCKS_PER_SEC;
-    //------------------- ASM Sanity Check ------------------
-    printf("ASM SANITY CHECK \n");
-    for (int i = 0; i < vector_size; i++) {
-        if (i < 10)
-            printf("%f , ", xAsm[i]); // xAsm = 1 to vector size (size 2 = 0, 1)
+    for(int i = 0; i < 2; i++) {
+        for(int j = 0; j < 3; j++) {
+            printf("%d ", results[i][j]);
+        }
+        printf("\n");
     }
-    printf("The loop took %f seconds to execute\n", asm_time);
-    // ASM end
 
-    free(y);
-    free(xC);
-    free(xAsm);
-
-
-    if (isValid) {
-        printf("\nSuccess");
-    }
-    else {
-        printf("\nFailed");
-    }
     return 0;
 }
