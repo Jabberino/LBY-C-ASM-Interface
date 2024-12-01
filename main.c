@@ -37,8 +37,13 @@ int main(void) {
     float* xC, * xAsm, * y;
 
     float epsilon = 0.00001f;
-    size_t vector_size = 12;
+    int vector_size = 12;
     float scalar = 2.0f;
+
+    printf("Vector size: ");
+    scanf("%d", &vector_size);
+    printf("Scalar value: ");
+    scanf("%f", &scalar);
 
     xC = (float*)malloc(vector_size * sizeof(float));
     xAsm = (float*)malloc(vector_size * sizeof(float));
@@ -73,7 +78,7 @@ int main(void) {
     // ASM start
     start = clock();
     //cFunc(xAsm, y, scalar, vector_size);
-    asmFunc(vector_size, xAsm, y, scalar);
+    // asmFunc(vector_size, xAsm, y, scalar);
     end = clock();
     double asm_time = ((double)(end - start)) / CLOCKS_PER_SEC;
     //------------------- ASM Sanity Check ------------------
