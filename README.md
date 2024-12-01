@@ -40,8 +40,23 @@ Vector Y is initialized as [ 100.9324 + 0, ... , 100.9324 + (vector_size - 1) ]
 *Note: The values are averages of 30 runs.*
 
 ### Performance
+The program is designed to take an integer that will serve as the exponent of 2, defining the vector size. Scalar value is also taken from user input, while Vectors X and Y are initialized within the program.  
+
+The functions, written in C and Assembly, to perform the required calculation was executed 30 times. Afterwards, the average execution time for each version were recorded. The values obtained **almost consistently showed that C takes more time to run compared to Assembly**. For 2^20, there's a difference of approximately 1 millisecond and for 2^24, there's at least a 15-millisecond difference. However, when the exponent is increased to 30, the time difference between C and Assembly became unpredictable. In the first set where the vectors contained whole numbers, Assembly became slightly slower than C but in the second set Assembly was again faster than C (by around 1000 milliseconds).
+
+
 ### Accuracy
+For all instances, both C and Assembly resulted to the same output. Although the codes written in the aforementioned languages slightly differ with the format, the logic was closely similar. In C, the operation ( A * X[i] + Y[i] ) happens less frequently than its Assembly counterpart as it calculates for every 4 elements. On the other hand, Assembly performs the calculation one element at a time. Nonetheless, there were no problems in having a consistent output as the logic strictly followed A * X[i] + Y[i].
+
 
 ## Outputs
+### Set 1: with no fractional part
+Vector X is initialized as [ 1, ... , vector_size ]  
+Vector Y is initialized as [ 11 + 0, ... , 11 + (vector_size - 1) ]  
+![9](https://github.com/user-attachments/assets/356814cb-cefd-4d61-b019-f6d7fdb5580a)
+### Set 2: with fractional part
+Vector X is initialized as [ 25.83944 + 0, ... , 25.83944 + (vector_size - 1) ]  
+Vector Y is initialized as [ 100.9324 + 0, ... , 100.9324 + (vector_size - 1) ]  
+![14](https://github.com/user-attachments/assets/216d80ff-a94d-4d66-812e-2ef01641f712)
 
 ## Videos
