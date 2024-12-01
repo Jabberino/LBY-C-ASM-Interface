@@ -39,7 +39,7 @@ int main(void) {
     // Declare and intialize parameters
     float epsilon = 0.00001f;
     float scalar = 2.0f;
-    int vectorSizes[] = {2e20, 2e5, 2e7};
+    int vectorSizes[] = {2e5, 2e5, 2e7};
     int results[2][3] = {
         {0,0,0},
         {0,0,0}
@@ -78,7 +78,7 @@ int main(void) {
         for(int j = 0; j < 10; j++) {
             printf("%f ", xC[j]);
         }
-        printf("Asm Output:");
+        printf("\nAsm Output:");
         for(int j = 0; j < 10; j++) {
             printf("%f ", xC[j]);
         }
@@ -91,11 +91,13 @@ int main(void) {
             }
         }
 
-        printf("The x86-64 output is %s\n", isValid? "correct" : "incorrect");
+        printf("\nThe x86-64 output is %s\n", isValid? "correct" : "incorrect");
 
         free(xC);
         free(xAsm);
         free(y);
+
+        printf("done");
     }
 
     for(int i = 0; i < 2; i++) {
