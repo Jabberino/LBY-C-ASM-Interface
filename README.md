@@ -60,3 +60,7 @@ Vector Y is initialized as [ 100.9324 + 0, ... , 100.9324 + (vector_size - 1) ]
 ![14](https://github.com/user-attachments/assets/216d80ff-a94d-4d66-812e-2ef01641f712)
 
 ## Videos
+
+https://github.com/user-attachments/assets/70297b5f-23f8-4e5c-90c7-b56d55a06ea8
+
+
